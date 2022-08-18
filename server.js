@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const util = require('util');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,16 +29,22 @@ app.use(bodyParser.json());
 app.post('/message', (req, res) => {
     const { phoneNumber, message } = req.body;
     console.log('body', req.body);
+
     client.messages.create({
       body: message,
       from: TWILIO_TRIAL_NUMBER,
-      to: phoneNumber
+      to: phoneNumber,
     })
     .then(message => {
       console.log(`Message sent: ${message.sid}`);
       res.sendStatus(200);
     })
     .catch(err => {
+      console.log(util.inspect(err, {
+        showHidden: true,
+        depth: 5,
+        colors: true
+      }))
       console.log(`Error: ${err.message}`);
       console.log(err.stack);
       res.status(500).send(err);

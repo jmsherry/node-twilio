@@ -25,11 +25,14 @@ document.addEventListener('DOMContentLoaded', function(){
           // "Content-Type": "application/x-www-form-urlencoded",
       }
     })
-    // .then(resp => resp.json())
-    .then(data => {
-      console.log('data', data);
+    .then(resp => {
+      if(resp.ok) {
+        // console.log('data', data);
       M.toast({html: 'Message sent!', classes: 'success'});
       form.reset();
+      } else {
+        throw resp;
+      }
     })
     .catch(err => {
       console.log(err)
